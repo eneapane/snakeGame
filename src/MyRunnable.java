@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class MyRunnable implements Runnable{
@@ -61,7 +62,7 @@ public class MyRunnable implements Runnable{
             }
         }
     }
-    private boolean linearSearch(LinkedList<BodyPart> list)
+    private boolean linearSearch(List<BodyPart> list)
     {
         for(int i = 0; i < list.size(); i++)
         {

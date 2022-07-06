@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MyPanel extends JPanel
@@ -68,6 +68,14 @@ public class MyPanel extends JPanel
     }*/
 
 
+    private static MyPanel single_instance;
+    public static MyPanel getMyPanel(){
+        if(single_instance == null)
+            single_instance = new MyPanel(Snake.getSnake(), Dimensions.WIDTH.get(),
+                    Dimensions.HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get(),
+                    Dimensions.SQUARES_ALONG_HEIGHT.get());
+        return single_instance;
+    }
     public MyPanel(Snake snake, int width, int height, int squaresAlongWidth, int squaresAlongHeight) {
         this.width = width;
         this.height = height;
@@ -75,6 +83,7 @@ public class MyPanel extends JPanel
         this.squaresAlongWidth = squaresAlongWidth;
         this.snake = snake;
         lastPressedChar = 'd';
+        this.setApple(new Apple(0, 0));
     }
 
     @Override
@@ -87,7 +96,7 @@ public class MyPanel extends JPanel
     private void drawSnake(Graphics g)
     {
         g.setColor(Color.PINK);
-        LinkedList<BodyPart> list = snake.getSnakeCoordinates();
+        List<BodyPart> list = snake.getSnakeCoordinates();
         for (BodyPart bodyPart : list) {
             g.fillRect(bodyPart.x, bodyPart.y, width / squaresAlongWidth, height / squaresAlongHeight);
         }

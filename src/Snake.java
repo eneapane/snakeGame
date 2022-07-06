@@ -1,26 +1,34 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Snake extends LinkedList<BodyPart> {
-    private LinkedList<BodyPart> snakeCoordinates;
+    private List<BodyPart> snakeCoordinates;
     private int length;
 
     public int getLength() {
         return length;
     }
-
-    public Snake(int width, int height, int squaresAlongHeight, int squaresAlongWidth)
+    private static Snake single_instance = null;
+    public static Snake getSnake(){
+        if (single_instance == null)
+            single_instance = new Snake(Dimensions.WIDTH.get(), Dimensions.HEIGHT.get(),
+                    Dimensions.SQUARES_ALONG_HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get());
+        return single_instance;
+    }
+    private Snake(int width, int height, int squaresAlongHeight, int squaresAlongWidth)
     {
         this.length = 2;
         int yC = ThreadLocalRandom.current().nextInt(squaresAlongHeight)*height/squaresAlongHeight;
         int xC = ThreadLocalRandom.current().nextInt(2, squaresAlongWidth)*width/squaresAlongWidth;
-        snakeCoordinates = new LinkedList<>();
+        snakeCoordinates = new ArrayList<>();
         snakeCoordinates.add(new BodyPart(xC, yC));
         snakeCoordinates.add(new BodyPart(xC - width/squaresAlongWidth, yC));
         snakeCoordinates.add(new BodyPart(xC - 2*width/squaresAlongWidth, yC));
     }
 
-    public LinkedList<BodyPart> getSnakeCoordinates() {
+    public List<BodyPart> getSnakeCoordinates() {
         return snakeCoordinates;
     }
 
