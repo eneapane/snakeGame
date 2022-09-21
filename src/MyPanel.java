@@ -5,10 +5,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MyPanel extends JPanel
 {
-    public int width;
-    public int height;
-    public int squaresAlongHeight;
-    public int squaresAlongWidth;
+    private int squaresAlongWidth = Dimensions.SQUARES_ALONG_WIDTH.get();
+    private int squaresAlongHeight = Dimensions.SQUARES_ALONG_HEIGHT.get();
+    private int width = Dimensions.WIDTH.get();
+    private int height = Dimensions.WIDTH.get();
     private Apple apple;
     private final Snake snake;
     private char lastPressedChar;
@@ -29,45 +29,6 @@ public class MyPanel extends JPanel
         return snake;
     }
 
-    /*public void setSnake(Snake snake) {
-        this.snake = snake;
-    }*/
-
-    @Override
-    public int getWidth() {
-        return width;
-    }
-
-    /*public void setWidth(int width) {
-        this.width = width;
-    }*/
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    /*public void setHeight(int height) {
-        this.height = height;
-    }*/
-
-    public int getSquaresAlongHeight() {
-        return squaresAlongHeight;
-    }
-
-    /*public void setSquaresAlongHeight(int squaresAlongHeight) {
-        this.squaresAlongHeight = squaresAlongHeight;
-    }*/
-
-    public int getSquaresAlongWidth() {
-        return squaresAlongWidth;
-    }
-
-    /*public void setSquaresAlongWidth(int squaresAlongWidth) {
-        this.squaresAlongWidth = squaresAlongWidth;
-    }*/
-
-
     private static MyPanel single_instance;
     public static MyPanel getMyPanel(){
         if(single_instance == null)
@@ -77,10 +38,6 @@ public class MyPanel extends JPanel
         return single_instance;
     }
     public MyPanel(Snake snake, int width, int height, int squaresAlongWidth, int squaresAlongHeight) {
-        this.width = width;
-        this.height = height;
-        this.squaresAlongHeight = squaresAlongHeight;
-        this.squaresAlongWidth = squaresAlongWidth;
         this.snake = snake;
         lastPressedChar = 'd';
         this.setApple(new Apple(0, 0));
@@ -89,7 +46,10 @@ public class MyPanel extends JPanel
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        drawGrid(g);
+        if(getSnake().getLength() <= 5)
+            drawGridLevel1(g);
+        else
+            drawGridLevel2(g);
         drawSnake(g);
         drawApple(g);
     }
@@ -98,7 +58,9 @@ public class MyPanel extends JPanel
         g.setColor(Color.PINK);
         List<BodyPart> list = snake.getSnakeCoordinates();
         for (BodyPart bodyPart : list) {
-            g.fillRect(bodyPart.x, bodyPart.y, width / squaresAlongWidth, height / squaresAlongHeight);
+            g.fillRect(bodyPart.x, bodyPart.y,
+                    Dimensions.WIDTH.get()/ Dimensions.SQUARES_ALONG_WIDTH.get(),
+                    Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get());
         }
     }
     private void drawApple(Graphics g)
@@ -106,22 +68,29 @@ public class MyPanel extends JPanel
         g.setColor(Color.RED);
         if(apple.getX() == snake.getSnakeCoordinates().get(0).x &&
                 apple.getY() == snake.getSnakeCoordinates().get(0).y) {
-            apple = new Apple(ThreadLocalRandom.current().nextInt(squaresAlongWidth) * width / squaresAlongWidth,
-                    ThreadLocalRandom.current().nextInt(squaresAlongHeight) * height / squaresAlongHeight);
-            this.getSnake().addCoordinate(width, height, squaresAlongWidth, squaresAlongHeight);
+            apple = new Apple(ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_WIDTH.get()) * Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get(),
+                    ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_HEIGHT.get()) * Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get());
+            this.getSnake().addCoordinate(Dimensions.WIDTH.get(), Dimensions.HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get(), Dimensions.SQUARES_ALONG_HEIGHT.get());
         }
-        g.fillRect(apple.getX(), apple.getY(), width/squaresAlongWidth, height/squaresAlongHeight);
+        g.fillRect(apple.getX(), apple.getY(),
+                Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get(),  Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get());
     }
-    private void drawGrid(Graphics g)
+    private void drawGridLevel1(Graphics g)
     {
         this.setBackground(Color.BLACK);
-        for(int x = 0; x < this.getWidth(); x+= this.getWidth()/this.getSquaresAlongWidth())
+        for(int x = 0; x < Dimensions.HEIGHT.get(); x+= Dimensions.WIDTH.get()/Dimensions.SQUARES_ALONG_WIDTH.get())
         {
             g.setColor(Color.WHITE);
             g.drawLine(x, 0, x, this.getHeight());
         }
-        for(int y = 0; y < this.getHeight(); y+=this.getHeight()/this.getSquaresAlongHeight())
+        for(int y = 0; y < Dimensions.HEIGHT.get(); y+=Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get())
             g.drawLine(0, y, this.getWidth(),y );
+    }
+    private void drawGridLevel2(Graphics g){
+        g.setColor(Color.ORANGE);
+        g.fillRect(0, 0, Dimensions.WIDTH.get()/Dimensions.SQUARES_ALONG_WIDTH.get(), Dimensions.HEIGHT.get());
+        g.fillRect(0, 0, Dimensions.WIDTH.get(), Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get());
+        drawGridLevel1(g);
     }
 }
 

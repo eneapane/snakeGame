@@ -19,7 +19,7 @@ public class Snake extends LinkedList<BodyPart> {
     }
     private Snake(int width, int height, int squaresAlongHeight, int squaresAlongWidth)
     {
-        this.length = 2;
+        this.length = 3;
         int yC = ThreadLocalRandom.current().nextInt(squaresAlongHeight)*height/squaresAlongHeight;
         int xC = ThreadLocalRandom.current().nextInt(2, squaresAlongWidth)*width/squaresAlongWidth;
         snakeCoordinates = new ArrayList<>();
