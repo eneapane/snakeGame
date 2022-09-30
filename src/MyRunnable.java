@@ -1,11 +1,8 @@
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //TODO make use of Dimensions.*
 public class MyRunnable implements Runnable {
-    private final MyPanel panel;
+    private final Snake snake;
     private boolean doStop = false;
 
     public synchronized void doStop() {
@@ -16,8 +13,8 @@ public class MyRunnable implements Runnable {
         return !this.doStop;
     }
 
-    public MyRunnable(MyPanel panel) {
-        this.panel = panel;
+    public MyRunnable(Snake snake) {
+        this.snake = snake;
     }
 
     @Override
@@ -28,42 +25,42 @@ public class MyRunnable implements Runnable {
             } catch (InterruptedException exc) {
                 exc.printStackTrace();
             }
-            LinkedList<BodyPart> newList = new LinkedList<>();
+            ArrayList<BodyPart> newList = new ArrayList<>();
             newList.add(new BodyPart(0, 0));
-            for (int i = 0; i < panel.getSnake().getSnakeCoordinates().size() - 1; i++) {
-                newList.add(panel.getSnake().getSnakeCoordinates().get(i));
+            for (int i = 0; i < snake.getSnakeCoordinates().size() - 1; i++) {
+                newList.add(snake.getSnakeCoordinates().get(i));
             }
-            if (panel.getLastPressedChar() == 'w') {
-                int newX = panel.getSnake().getSnakeCoordinates().get(0).x;
-                int newY = (panel.getSnake().getSnakeCoordinates().get(0).y - Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get()
+            if (snake.getLastPressedChar() == 'w') {
+                int newX = snake.getSnakeCoordinates().get(0).x;
+                int newY = (snake.getSnakeCoordinates().get(0).y - Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get()
                         + Dimensions.HEIGHT.get()) % Dimensions.HEIGHT.get();
                 newList.set(0, new BodyPart(newX, newY));
-                panel.getSnake().setSnakeCoordinates(newList);
-                panel.repaint();
-            } else if (panel.getLastPressedChar() == 's') {
-                int newX = (panel.getSnake().getSnakeCoordinates().get(0).x) % Dimensions.WIDTH.get();
-                int newY = (panel.getSnake().getSnakeCoordinates().get(0).y + Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get())
+                snake.setSnakeCoordinates(newList);
+                MyPanel.getMyPanel().repaint();
+            } else if (snake.getLastPressedChar() == 's') {
+                int newX = (snake.getSnakeCoordinates().get(0).x) % Dimensions.WIDTH.get();
+                int newY = (snake.getSnakeCoordinates().get(0).y + Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get())
                         % Dimensions.HEIGHT.get();
                 newList.set(0, new BodyPart(newX, newY));
-                panel.getSnake().setSnakeCoordinates(newList);
-                panel.repaint();
-            } else if (panel.getLastPressedChar() == 'a') {
-                int newX = (panel.getSnake().getSnakeCoordinates().get(0).x
+                snake.setSnakeCoordinates(newList);
+                MyPanel.getMyPanel().repaint();
+            } else if (snake.getLastPressedChar() == 'a') {
+                int newX = (snake.getSnakeCoordinates().get(0).x
                         - Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get() + Dimensions.WIDTH.get())
                         % Dimensions.WIDTH.get();
-                int newY = panel.getSnake().getSnakeCoordinates().get(0).y;
+                int newY = snake.getSnakeCoordinates().get(0).y;
                 newList.set(0, new BodyPart(newX, newY));
-                panel.getSnake().setSnakeCoordinates(newList);
-                panel.repaint();
-            } else if (panel.getLastPressedChar() == 'd') {
-                int newX = (panel.getSnake().getSnakeCoordinates().get(0).x
+                snake.setSnakeCoordinates(newList);
+                MyPanel.getMyPanel().repaint();
+            } else if (snake.getLastPressedChar() == 'd') {
+                int newX = (snake.getSnakeCoordinates().get(0).x
                         + Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get()) % Dimensions.WIDTH.get();
-                int newY = panel.getSnake().getSnakeCoordinates().get(0).y;
+                int newY = snake.getSnakeCoordinates().get(0).y;
                 newList.set(0, new BodyPart(newX, newY));
-                panel.getSnake().setSnakeCoordinates(newList);
-                panel.repaint();
+                snake.setSnakeCoordinates(newList);
+                MyPanel.getMyPanel().repaint();
             }
-            if (!linearSearch(panel.getSnake().getSnakeCoordinates())) {
+            if (!linearSearch(snake.getSnakeCoordinates())) {
                 System.err.println("exit");
                 System.exit(0);
             }

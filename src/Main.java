@@ -9,7 +9,7 @@ public class Main {
 
         frame.add(MyPanel.getMyPanel());
 
-        frame.addKeyListener(new MyKeyListener(MyPanel.getMyPanel()));
+        frame.addKeyListener(new MyKeyListener(Snake.getSnake()));
 
         frame.setVisible(true);
     }

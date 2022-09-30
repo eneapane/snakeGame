@@ -5,11 +5,11 @@ import java.util.LinkedList;
 class MyKeyListener extends KeyAdapter
 {
     private boolean firstKeyTypedCall;
-    private final MyPanel panel;
+    private final Snake snake;
     private MyRunnable runnable;
-    public MyKeyListener(MyPanel panel)
+    public MyKeyListener(Snake snake)
     {
-        this.panel = panel;
+        this.snake = snake;
         firstKeyTypedCall = true;
     }
     @Override
@@ -27,16 +27,16 @@ class MyKeyListener extends KeyAdapter
             }
             firstKeyTypedCall = false;
 
-            if (e.getKeyChar() == 'w' && panel.getLastPressedChar() != 's' && panel.getLastPressedChar() != 'w') {
-                panel.setLastPressedChar('w');
-            } else if (e.getKeyChar() == 's' && panel.getLastPressedChar() != 'w' && panel.getLastPressedChar() != 's') {
-                panel.setLastPressedChar('s');
-            } else if (e.getKeyChar() == 'a' && panel.getLastPressedChar() != 'd' && panel.getLastPressedChar() != 'a') {
-                panel.setLastPressedChar('a');
-            } else if (e.getKeyChar() == 'd' && panel.getLastPressedChar() != 'a' && panel.getLastPressedChar() != 'd') {
-                panel.setLastPressedChar('d');
+            if (e.getKeyChar() == 'w' && snake.getLastPressedChar() != 's' && snake.getLastPressedChar() != 'w') {
+                snake.setLastPressedChar('w');
+            } else if (e.getKeyChar() == 's' && snake.getLastPressedChar() != 'w' && snake.getLastPressedChar() != 's') {
+                snake.setLastPressedChar('s');
+            } else if (e.getKeyChar() == 'a' && snake.getLastPressedChar() != 'd' && snake.getLastPressedChar() != 'a') {
+                snake.setLastPressedChar('a');
+            } else if (e.getKeyChar() == 'd' && snake.getLastPressedChar() != 'a' && snake.getLastPressedChar() != 'd') {
+                snake.setLastPressedChar('d');
             }
-            runnable = new MyRunnable(panel);
+            runnable = new MyRunnable(snake);
             Thread thread = new Thread(runnable);
             thread.start();
         }

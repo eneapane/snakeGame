@@ -6,65 +6,62 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Snake extends LinkedList<BodyPart> {
     private List<BodyPart> snakeCoordinates;
     private int length;
-
-    public int getLength() {
-        return length;
-    }
     private static Snake single_instance = null;
-    public static Snake getSnake(){
+    private final int rectangleHeight = Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get();
+    private final int rectangleWidth = Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get();
+    private char lastPressedChar;
+
+    public char getLastPressedChar() {
+        return lastPressedChar;
+    }
+
+    public void setLastPressedChar(char lastPressedChar) {
+        this.lastPressedChar = lastPressedChar;
+    }
+
+    public static Snake getSnake() {
         if (single_instance == null)
-            single_instance = new Snake(Dimensions.WIDTH.get(), Dimensions.HEIGHT.get(),
-                    Dimensions.SQUARES_ALONG_HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get());
+            single_instance = new Snake();
         return single_instance;
     }
-    private Snake(int width, int height, int squaresAlongHeight, int squaresAlongWidth)
-    {
+
+    private Snake() {
         this.length = 3;
-        int yC = ThreadLocalRandom.current().nextInt(squaresAlongHeight)*height/squaresAlongHeight;
-        int xC = ThreadLocalRandom.current().nextInt(2, squaresAlongWidth)*width/squaresAlongWidth;
+        int yC = ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_HEIGHT.get()) * rectangleHeight;
+        int xC = ThreadLocalRandom.current().nextInt(2, Dimensions.SQUARES_ALONG_WIDTH.get()) * rectangleWidth;
         snakeCoordinates = new ArrayList<>();
         snakeCoordinates.add(new BodyPart(xC, yC));
-        snakeCoordinates.add(new BodyPart(xC - width/squaresAlongWidth, yC));
-        snakeCoordinates.add(new BodyPart(xC - 2*width/squaresAlongWidth, yC));
+        snakeCoordinates.add(new BodyPart(xC - rectangleWidth, yC));
+        snakeCoordinates.add(new BodyPart(xC - 2 * rectangleHeight, yC));
+        lastPressedChar = 'd';
     }
 
-    public List<BodyPart> getSnakeCoordinates() {
-        return snakeCoordinates;
-    }
-
-    public void setSnakeCoordinates(LinkedList<BodyPart> snakeCoordinates) {
+    public List<BodyPart> getSnakeCoordinates() {return snakeCoordinates;}
+    public void setSnakeCoordinates(ArrayList<BodyPart> snakeCoordinates) {
         this.snakeCoordinates = snakeCoordinates;
     }
 
-    public void addCoordinate(int width, int height, int squaresAlongWidth, int squaresAlongHeight)
-    {
+    public void addCoordinate() {
         this.length++;
-        int size = getSnakeCoordinates().size();
-        if(this.getSnakeCoordinates().get(size - 1).x == this.getSnakeCoordinates().get(size - 2).x)
-        {
-            int newX = this.getSnakeCoordinates().get(size - 1).x;
-            if(this.getSnakeCoordinates().get(size - 1).y > this.getSnakeCoordinates().get(size - 2).y) {
-                int newY = this.getSnakeCoordinates().get(size - 1).y + height/squaresAlongHeight;
-                this.getSnakeCoordinates().add(new BodyPart(newX, newY));
+        int size = snakeCoordinates.size();
+        if (this.snakeCoordinates.get(size - 1).x == this.snakeCoordinates.get(size - 2).x) {
+            int newX = this.snakeCoordinates.get(size - 1).x;
+            int newY;
+            if (this.snakeCoordinates.get(size - 1).y > this.snakeCoordinates.get(size - 2).y) {
+                newY = this.snakeCoordinates.get(size - 1).y + rectangleHeight;
+            } else {
+                newY = this.snakeCoordinates.get(size - 1).y - rectangleHeight;
             }
-            else
-            {
-                int newY = this.getSnakeCoordinates().get(size - 1).y - height/squaresAlongHeight;
-                this.getSnakeCoordinates().add(new BodyPart(newX, newY));
+            this.snakeCoordinates.add(new BodyPart(newX, newY));
+        } else if (this.snakeCoordinates.get(size - 1).y == this.snakeCoordinates.get(size - 2).y) {
+            int newY = this.snakeCoordinates.get(size - 1).y;
+            int newX;
+            if (this.snakeCoordinates.get(size - 1).x > this.snakeCoordinates.get(size - 2).x) {
+                newX = this.snakeCoordinates.get(size - 1).x + rectangleWidth;
+            } else {
+                newX = this.snakeCoordinates.get(size - 1).x - rectangleWidth;
             }
-        }
-        else if(this.getSnakeCoordinates().get(size - 1).y == this.getSnakeCoordinates().get(size - 2).y)
-        {
-            int newY = this.getSnakeCoordinates().get(size - 1).y;
-            if(this.getSnakeCoordinates().get(size - 1).x > this.getSnakeCoordinates().get(size - 2).x) {
-                int newX = this.getSnakeCoordinates().get(size - 1).x + width/squaresAlongWidth;
-                this.getSnakeCoordinates().add(new BodyPart(newX, newY));
-            }
-            else
-            {
-                int newX = this.getSnakeCoordinates().get(size - 1).x - width/squaresAlongWidth;
-                this.getSnakeCoordinates().add(new BodyPart(newX, newY));
-            }
+            this.snakeCoordinates.add(new BodyPart(newX, newY));
         }
     }
 }
