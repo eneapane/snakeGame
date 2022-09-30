@@ -3,15 +3,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MyPanel extends JPanel
-{
-    private int squaresAlongWidth = Dimensions.SQUARES_ALONG_WIDTH.get();
-    private int squaresAlongHeight = Dimensions.SQUARES_ALONG_HEIGHT.get();
-    private int width = Dimensions.WIDTH.get();
-    private int height = Dimensions.WIDTH.get();
+class MyPanel extends JPanel {
+    private char lastPressedChar;
     private Apple apple;
     private final Snake snake;
-    private char lastPressedChar;
+    private int rectangleWidth = Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get();
+    private int rectangleHeight = Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get();
 
     public char getLastPressedChar() {
         return lastPressedChar;
@@ -30,14 +27,14 @@ public class MyPanel extends JPanel
     }
 
     private static MyPanel single_instance;
-    public static MyPanel getMyPanel(){
-        if(single_instance == null)
-            single_instance = new MyPanel(Snake.getSnake(), Dimensions.WIDTH.get(),
-                    Dimensions.HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get(),
-                    Dimensions.SQUARES_ALONG_HEIGHT.get());
+
+    public static MyPanel getMyPanel() {
+        if (single_instance == null)
+            single_instance = new MyPanel(Snake.getSnake());
         return single_instance;
     }
-    public MyPanel(Snake snake, int width, int height, int squaresAlongWidth, int squaresAlongHeight) {
+
+    public MyPanel(Snake snake) {
         this.snake = snake;
         lastPressedChar = 'd';
         this.setApple(new Apple(0, 0));
@@ -46,51 +43,42 @@ public class MyPanel extends JPanel
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if(getSnake().getLength() <= 5)
-            drawGridLevel1(g);
-        else
-            drawGridLevel2(g);
+
+        drawGrid(g);
+
         drawSnake(g);
         drawApple(g);
     }
-    private void drawSnake(Graphics g)
-    {
-        g.setColor(Color.PINK);
+
+    private void drawSnake(Graphics g) {
+
+        g.setColor(Color.GREEN);
         List<BodyPart> list = snake.getSnakeCoordinates();
-        for (BodyPart bodyPart : list) {
-            g.fillRect(bodyPart.x, bodyPart.y,
-                    Dimensions.WIDTH.get()/ Dimensions.SQUARES_ALONG_WIDTH.get(),
-                    Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get());
-        }
+        for (BodyPart bodyPart : list)
+            g.fillRect(bodyPart.x, bodyPart.y, rectangleWidth, rectangleHeight);
     }
-    private void drawApple(Graphics g)
-    {
+
+    private void drawApple(Graphics g) {
         g.setColor(Color.RED);
-        if(apple.getX() == snake.getSnakeCoordinates().get(0).x &&
+        if (apple.getX() == snake.getSnakeCoordinates().get(0).x &&
                 apple.getY() == snake.getSnakeCoordinates().get(0).y) {
-            apple = new Apple(ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_WIDTH.get()) * Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get(),
-                    ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_HEIGHT.get()) * Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get());
-            this.getSnake().addCoordinate(Dimensions.WIDTH.get(), Dimensions.HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get(), Dimensions.SQUARES_ALONG_HEIGHT.get());
+            int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_WIDTH.get());
+            int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_HEIGHT.get());
+            apple = new Apple( randomXRectangle * rectangleWidth, randomYRectangle * rectangleHeight);
+            snake.addCoordinate(Dimensions.WIDTH.get(), Dimensions.HEIGHT.get(), Dimensions.SQUARES_ALONG_WIDTH.get(), Dimensions.SQUARES_ALONG_HEIGHT.get());
         }
-        g.fillRect(apple.getX(), apple.getY(),
-                Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get(),  Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get());
+        g.fillOval(apple.getX(), apple.getY(), rectangleWidth, rectangleHeight);
     }
-    private void drawGridLevel1(Graphics g)
-    {
+
+    private void drawGrid(Graphics g) {
         this.setBackground(Color.BLACK);
-        for(int x = 0; x < Dimensions.HEIGHT.get(); x+= Dimensions.WIDTH.get()/Dimensions.SQUARES_ALONG_WIDTH.get())
-        {
+        for (int x = 0; x <= Dimensions.WIDTH.get(); x += Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get()) {
             g.setColor(Color.WHITE);
-            g.drawLine(x, 0, x, this.getHeight());
+            g.drawLine(x, 0, x, Dimensions.HEIGHT.get());
         }
-        for(int y = 0; y < Dimensions.HEIGHT.get(); y+=Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get())
-            g.drawLine(0, y, this.getWidth(),y );
+        for (int y = 0; y <= Dimensions.HEIGHT.get(); y += Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get())
+            g.drawLine(0, y, Dimensions.WIDTH.get(), y);
     }
-    private void drawGridLevel2(Graphics g){
-        g.setColor(Color.ORANGE);
-        g.fillRect(0, 0, Dimensions.WIDTH.get()/Dimensions.SQUARES_ALONG_WIDTH.get(), Dimensions.HEIGHT.get());
-        g.fillRect(0, 0, Dimensions.WIDTH.get(), Dimensions.HEIGHT.get()/Dimensions.SQUARES_ALONG_HEIGHT.get());
-        drawGridLevel1(g);
-    }
+
 }
 

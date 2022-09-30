@@ -1,4 +1,4 @@
-public class BodyPart
+public class BodyPart //data structure
 {
     public int x;
     public int y;
@@ -7,5 +7,4 @@ public class BodyPart
         this.x = x;
         this.y = y;
     }
-
 }
