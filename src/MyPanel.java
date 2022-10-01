@@ -3,21 +3,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
+//my panel paints the game
 class MyPanel extends JPanel {
     private Apple apple;
     private final Snake snake;
     private final int rectangleWidth = Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get();
     private final int rectangleHeight = Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get();
 
-
-    public void setApple(Apple apple) {
-        this.apple = apple;
-    }
-
-    public Snake getSnake() {
-        return snake;
-    }
 
     private static MyPanel single_instance;
 
@@ -29,7 +21,7 @@ class MyPanel extends JPanel {
 
     public MyPanel() {
         this.snake = Snake.getSnake();
-        this.setApple(new Apple(0, 0));
+        this.apple = new Apple(0, 0);
     }
 
     @Override

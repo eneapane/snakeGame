@@ -3,21 +3,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+//this class makes the snake longer and registers the keyboard buttons
 public class Snake extends LinkedList<BodyPart> {
-    private List<BodyPart> snakeCoordinates;
-    private int length;
     private static Snake single_instance = null;
+    private int length;
+    private final List<BodyPart> snakeCoordinates;
     private final int rectangleHeight = Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get();
     private final int rectangleWidth = Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get();
-    private char lastPressedChar;
-
-    public char getLastPressedChar() {
-        return lastPressedChar;
-    }
-
-    public void setLastPressedChar(char lastPressedChar) {
-        this.lastPressedChar = lastPressedChar;
-    }
 
     public static Snake getSnake() {
         if (single_instance == null)
@@ -33,12 +25,10 @@ public class Snake extends LinkedList<BodyPart> {
         snakeCoordinates.add(new BodyPart(xC, yC));
         snakeCoordinates.add(new BodyPart(xC - rectangleWidth, yC));
         snakeCoordinates.add(new BodyPart(xC - 2 * rectangleHeight, yC));
-        lastPressedChar = 'd';
     }
 
-    public List<BodyPart> getSnakeCoordinates() {return snakeCoordinates;}
-    public void setSnakeCoordinates(ArrayList<BodyPart> snakeCoordinates) {
-        this.snakeCoordinates = snakeCoordinates;
+    public List<BodyPart> getSnakeCoordinates() {
+        return snakeCoordinates;
     }
 
     public void addCoordinate() {
@@ -63,5 +53,33 @@ public class Snake extends LinkedList<BodyPart> {
             }
             this.snakeCoordinates.add(new BodyPart(newX, newY));
         }
+    }
+
+    public void moveCoordinate(char characterCommand
+    ) {
+        //snake move coordinate
+        snakeCoordinates.remove(snakeCoordinates.size() - 1);
+        int newX = 0;
+        int newY = 0;
+        if (characterCommand == 'w') {
+            newX = snakeCoordinates.get(0).x;
+            newY = (snakeCoordinates.get(0).y - rectangleHeight
+                    + Dimensions.HEIGHT.get()) % Dimensions.HEIGHT.get();
+        } else if (characterCommand == 's') {
+            newX = (snakeCoordinates.get(0).x) % Dimensions.WIDTH.get();
+            newY = (snakeCoordinates.get(0).y + rectangleHeight)
+                    % Dimensions.HEIGHT.get();
+
+        } else if (characterCommand == 'a') {
+            newX = (snakeCoordinates.get(0).x
+                    - rectangleWidth + Dimensions.WIDTH.get())
+                    % Dimensions.WIDTH.get();
+            newY = snakeCoordinates.get(0).y;
+        } else if (characterCommand == 'd') {
+            newX = (snakeCoordinates.get(0).x
+                    + rectangleWidth) % Dimensions.WIDTH.get();
+            newY = snakeCoordinates.get(0).y;
+        }
+        snakeCoordinates.add(0, new BodyPart(newX, newY));
     }
 }
