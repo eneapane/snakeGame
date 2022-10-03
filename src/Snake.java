@@ -1,10 +1,8 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 //this class makes the snake longer and registers the keyboard buttons
-public class Snake extends LinkedList<BodyPart> {
+class Snake {
     private static Snake single_instance = null;
     private int length;
     private final List<BodyPart> snakeCoordinates;
@@ -33,30 +31,44 @@ public class Snake extends LinkedList<BodyPart> {
 
     public void addCoordinate() {
         this.length++;
-        int size = snakeCoordinates.size();
-        if (this.snakeCoordinates.get(size - 1).x == this.snakeCoordinates.get(size - 2).x) {
-            int newX = this.snakeCoordinates.get(size - 1).x;
+        if (snakeIsMovingVertically()) {
+            int newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x;
             int newY;
-            if (this.snakeCoordinates.get(size - 1).y > this.snakeCoordinates.get(size - 2).y) {
-                newY = this.snakeCoordinates.get(size - 1).y + rectangleHeight;
+            if (snakeIsMovingUp()) {
+                newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y + rectangleHeight;
             } else {
-                newY = this.snakeCoordinates.get(size - 1).y - rectangleHeight;
+                newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y - rectangleHeight;
             }
             this.snakeCoordinates.add(new BodyPart(newX, newY));
-        } else if (this.snakeCoordinates.get(size - 1).y == this.snakeCoordinates.get(size - 2).y) {
-            int newY = this.snakeCoordinates.get(size - 1).y;
+        } else if (snakeIsMovingHorizontally()) {
+            int newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y;
             int newX;
-            if (this.snakeCoordinates.get(size - 1).x > this.snakeCoordinates.get(size - 2).x) {
-                newX = this.snakeCoordinates.get(size - 1).x + rectangleWidth;
+            if (snakeIsMovingRight()) {
+                newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x + rectangleWidth;
             } else {
-                newX = this.snakeCoordinates.get(size - 1).x - rectangleWidth;
+                newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x - rectangleWidth;
             }
             this.snakeCoordinates.add(new BodyPart(newX, newY));
         }
     }
 
-    public void moveCoordinate(char characterCommand
-    ) {
+    private boolean snakeIsMovingVertically() {
+        return this.snakeCoordinates.get(snakeCoordinates.size() - 1).x == this.snakeCoordinates.get(snakeCoordinates.size() - 2).x;
+    }
+
+    private boolean snakeIsMovingUp() {
+        return this.snakeCoordinates.get(snakeCoordinates.size() - 1).y > this.snakeCoordinates.get(snakeCoordinates.size() - 2).y;
+    }
+
+    private boolean snakeIsMovingHorizontally() {
+        return this.snakeCoordinates.get(snakeCoordinates.size() - 1).y == this.snakeCoordinates.get(snakeCoordinates.size() - 2).y;
+    }
+
+    private boolean snakeIsMovingRight() {
+        return this.snakeCoordinates.get(snakeCoordinates.size() - 1).x > this.snakeCoordinates.get(snakeCoordinates.size() - 2).x;
+    }
+
+    public void moveCoordinate(char characterCommand) {
         //snake move coordinate
         snakeCoordinates.remove(snakeCoordinates.size() - 1);
         int newX = 0;
@@ -80,6 +92,9 @@ public class Snake extends LinkedList<BodyPart> {
                     + rectangleWidth) % Dimensions.WIDTH.get();
             newY = snakeCoordinates.get(0).y;
         }
-        snakeCoordinates.add(0, new BodyPart(newX, newY));
+        BodyPart newCoordinate = new BodyPart(newX, newY);
+        if(snakeCoordinates.contains(newCoordinate))
+            throw new SnakeBitItselfException();
+        snakeCoordinates.add(0, newCoordinate);
     }
 }

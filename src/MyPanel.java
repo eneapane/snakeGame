@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-//my panel paints the game
+//my panel paints the game AND
 class MyPanel extends JPanel {
     private Apple apple;
     private final Snake snake;

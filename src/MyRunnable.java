@@ -1,6 +1,6 @@
 import java.util.*;
 
-//TODO make use of Dimensions.*
+
 public class MyRunnable implements Runnable {
     private final Snake snake;
     private boolean doStop = false;
@@ -23,28 +23,14 @@ public class MyRunnable implements Runnable {
     public void run() {
         while (keepRunning()) {
             try {
-                Thread.sleep(100);
-            } catch (InterruptedException exc) {
+                Thread.sleep(200);
+                snake.moveCoordinate(lastPressedCharacter);
+                MyPanel.getMyPanel().repaint();
+            } catch (InterruptedException | SnakeBitItselfException exc) {
                 exc.printStackTrace();
-            }
-            snake.moveCoordinate(lastPressedCharacter);
-            MyPanel.getMyPanel().repaint();
-            if (!linearSearch(snake.getSnakeCoordinates())) {
-                System.err.println("exit");
+                System.err.println(exc.getMessage());
                 System.exit(0);
             }
         }
-    }
-
-    private boolean linearSearch(List<BodyPart> list) {
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.size(); j++) {
-                if (i != j) {
-                    if (list.get(i).x == list.get(j).x && list.get(i).y == list.get(j).y)
-                        return false;
-                }
-            }
-        }
-        return true;
     }
 }

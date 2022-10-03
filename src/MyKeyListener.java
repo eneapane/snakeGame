@@ -15,15 +15,16 @@ class MyKeyListener extends KeyAdapter {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyChar() == 'w' || e.getKeyChar() == 's' || e.getKeyChar() == 'a' || e.getKeyChar() == 'd') {
+        if (checkIfValidKey(e)) {
             if (!firstKeyTypedCall)
                 runnable.doStop();
+            firstKeyTypedCall = false;
+
             try {
                 Thread.sleep(25);
             } catch (InterruptedException exc) {
                 exc.printStackTrace();
             }
-            firstKeyTypedCall = false;
 
             if (checkIfItGoesOppositeDirection(e))
                 lastPressedChar = e.getKeyChar();
@@ -31,6 +32,9 @@ class MyKeyListener extends KeyAdapter {
             Thread thread = new Thread(runnable);
             thread.start();
         }
+    }
+    private boolean checkIfValidKey(KeyEvent e){
+        return e.getKeyChar() == 'w' || e.getKeyChar() == 's' || e.getKeyChar() == 'a' || e.getKeyChar() == 'd';
     }
     private boolean checkIfItGoesOppositeDirection(KeyEvent e){
         return !(lastPressedChar == 'a' && e.getKeyChar() == 'd') &&
