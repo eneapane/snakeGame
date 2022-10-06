@@ -23,7 +23,7 @@ public class MyRunnable implements Runnable {
     public void run() {
         while (keepRunning()) {
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
                 snake.moveCoordinate(lastPressedCharacter);
                 MyPanel.getMyPanel().repaint();
             } catch (InterruptedException | SnakeBitItselfException exc) {

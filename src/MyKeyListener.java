@@ -14,32 +14,54 @@ class MyKeyListener extends KeyAdapter {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        if (checkIfValidKey(e)) {
-            if (!firstKeyTypedCall)
-                runnable.doStop();
-            firstKeyTypedCall = false;
+    public void keyTyped(KeyEvent e) {
+        if (checkIfValidKey(e) && checkIfItGoesSameDirection(e) && checkIfItGoesOppositeDirection(e)) {
+            stopCurrentRunningThread();
 
-            try {
-                Thread.sleep(25);
-            } catch (InterruptedException exc) {
-                exc.printStackTrace();
-            }
+            changeDirectionOverhead();
 
             if (checkIfItGoesOppositeDirection(e))
                 lastPressedChar = e.getKeyChar();
-            runnable = new MyRunnable(snake, lastPressedChar);
-            Thread thread = new Thread(runnable);
-            thread.start();
+
+            startNewRunningThread();
         }
     }
-    private boolean checkIfValidKey(KeyEvent e){
+
+    private void stopCurrentRunningThread(){
+        if (!firstKeyTypedCall)
+            runnable.doStop();
+        firstKeyTypedCall = false;
+    }
+
+    private void changeDirectionOverhead(){
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    private boolean checkIfValidKey(KeyEvent e) {
         return e.getKeyChar() == 'w' || e.getKeyChar() == 's' || e.getKeyChar() == 'a' || e.getKeyChar() == 'd';
     }
-    private boolean checkIfItGoesOppositeDirection(KeyEvent e){
+
+    private boolean checkIfItGoesOppositeDirection(KeyEvent e) {
         return !(lastPressedChar == 'a' && e.getKeyChar() == 'd') &&
                 !(lastPressedChar == 'd' && e.getKeyChar() == 'a') &&
                 !(lastPressedChar == 'w' && e.getKeyChar() == 's') &&
                 !(lastPressedChar == 's' && e.getKeyChar() == 'w');
+    }
+
+    private boolean checkIfItGoesSameDirection(KeyEvent e) {
+        return !(lastPressedChar == 'a' && e.getKeyChar() == 'a') &&
+                !(lastPressedChar == 'd' && e.getKeyChar() == 'd') &&
+                !(lastPressedChar == 's' && e.getKeyChar() == 's') &&
+                !(lastPressedChar == 'w' && e.getKeyChar() == 'w');
+    }
+
+    private void startNewRunningThread(){
+        runnable = new MyRunnable(snake, lastPressedChar);
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }
