@@ -35,7 +35,7 @@ class MyKeyListener extends KeyAdapter {
 
     private void changeDirectionOverhead(){
         try {
-            Thread.sleep(100);
+            Thread.sleep(30);
         } catch (InterruptedException exc) {
             exc.printStackTrace();
         }

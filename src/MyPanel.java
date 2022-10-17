@@ -14,12 +14,14 @@ class MyPanel extends JPanel {
     private static MyPanel single_instance;
 
     public static MyPanel getMyPanel() {
+
         if (single_instance == null)
             single_instance = new MyPanel();
         return single_instance;
     }
 
     public MyPanel() {
+        System.out.println(this.getAlignmentY());
         this.snake = Snake.getSnake();
         this.apple = new Apple(0, 0);
     }
@@ -55,6 +57,8 @@ class MyPanel extends JPanel {
         this.setBackground(Color.BLACK);
         Color previousColor = g.getColor();
         g.setColor(Color.WHITE);
+        Dimension size
+                = Toolkit.getDefaultToolkit().getScreenSize();
         for (int x = 0; x <= Dimensions.WIDTH.get(); x += rectangleWidth)
             g.drawLine(x, 0, x, Dimensions.HEIGHT.get());
         for (int y = 0; y <= Dimensions.HEIGHT.get(); y += rectangleHeight)

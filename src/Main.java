@@ -5,12 +5,16 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
 
-        frame.setBounds(0, 0, (int) (Dimensions.WIDTH.get() * 1.1), (int) (Dimensions.HEIGHT.get() * 1.1));
-
         frame.add(MyPanel.getMyPanel());
+
+        //frame.add(Score.getScore());
 
         frame.addKeyListener(new MyKeyListener(Snake.getSnake()));
 
+        frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //frame.setUndecorated(true);
         frame.setVisible(true);
     }
 }
