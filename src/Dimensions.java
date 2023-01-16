@@ -1,18 +1,26 @@
 import java.awt.*;
 
 public enum Dimensions {
-    WIDTH(650),
-    HEIGHT(650),
-    SQUARES_ALONG_WIDTH(25),
-    SQUARES_ALONG_HEIGHT(25);
+    WIDTH(650, 25),
+    HEIGHT(650, 25);
 
-    private final int value;
-    Dimensions(int value){
-        this.value = value;
+
+    private final int totalLength;
+    private final int numberOfSquares;
+
+    Dimensions(int totalLength, int numberOfSquares){
+        this.totalLength = totalLength;
+        this.numberOfSquares = numberOfSquares;
     }
 
+    int totalLength(){
+        return totalLength;
+    }
 
-    public int get(){
-        return value;
+    int numberOfSquares(){
+        return numberOfSquares;
+    }
+    int squareLength(){
+        return totalLength/numberOfSquares;
     }
 }

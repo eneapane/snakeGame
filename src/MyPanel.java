@@ -1,14 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 //my panel paints the game AND
 class MyPanel extends JPanel {
     private Apple apple;
     private final Snake snake;
-    private final int rectangleWidth = Dimensions.WIDTH.get() / Dimensions.SQUARES_ALONG_WIDTH.get();
-    private final int rectangleHeight = Dimensions.HEIGHT.get() / Dimensions.SQUARES_ALONG_HEIGHT.get();
 
 
     private static MyPanel single_instance;
@@ -40,19 +37,19 @@ class MyPanel extends JPanel {
         g.setColor(Color.GREEN);
         List<BodyPart> list = snake.getSnakeCoordinates();
         for (BodyPart bodyPart : list)
-            g.fillRect(bodyPart.x, bodyPart.y, rectangleWidth, rectangleHeight);
+            g.fillRect(bodyPart.x, bodyPart.y, Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     private void drawApple(Graphics g) {
         g.setColor(Color.RED);
         if (apple.getX() == snake.getSnakeCoordinates().get(0).x &&
                 apple.getY() == snake.getSnakeCoordinates().get(0).y) {
-            int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_WIDTH.get());
-            int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.SQUARES_ALONG_HEIGHT.get());
-            apple = new Apple(randomXRectangle * rectangleWidth, randomYRectangle * rectangleHeight);
+            int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.WIDTH.numberOfSquares());
+            int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares());
+            apple = new Apple(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
             snake.addCoordinate();
         }
-        g.fillOval(apple.getX(), apple.getY(), rectangleWidth, rectangleHeight);
+        g.fillOval(apple.getX(), apple.getY(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     private void drawGrid(Graphics g) {
@@ -61,10 +58,10 @@ class MyPanel extends JPanel {
         g.setColor(Color.WHITE);
         Dimension size
                 = Toolkit.getDefaultToolkit().getScreenSize();
-        for (int x = 0; x <= Dimensions.WIDTH.get(); x += rectangleWidth)
-            g.drawLine(x, 0, x, Dimensions.HEIGHT.get());
-        for (int y = 0; y <= Dimensions.HEIGHT.get(); y += rectangleHeight)
-            g.drawLine(0, y, Dimensions.WIDTH.get(), y);
+        for (int x = 0; x <= Dimensions.WIDTH.totalLength(); x += Dimensions.WIDTH.squareLength())
+            g.drawLine(x, 0, x, Dimensions.HEIGHT.totalLength());
+        for (int y = 0; y <= Dimensions.HEIGHT.totalLength(); y += Dimensions.HEIGHT.squareLength())
+            g.drawLine(0, y, Dimensions.WIDTH.totalLength(), y);
         g.setColor(previousColor);
     }
 
