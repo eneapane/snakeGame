@@ -37,13 +37,13 @@ class MyPanel extends JPanel {
         g.setColor(Color.GREEN);
         List<BodyPart> list = snake.getSnakeCoordinates();
         for (BodyPart bodyPart : list)
-            g.fillRect(bodyPart.x, bodyPart.y, Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
+            g.fillRect(bodyPart.x(), bodyPart.y(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     private void drawApple(Graphics g) {
         g.setColor(Color.RED);
-        if (apple.getX() == snake.getSnakeCoordinates().get(0).x &&
-                apple.getY() == snake.getSnakeCoordinates().get(0).y) {
+        if (apple.getX() == snake.getSnakeCoordinates().get(0).x() &&
+                apple.getY() == snake.getSnakeCoordinates().get(0).y()) {
             int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.WIDTH.numberOfSquares());
             int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares());
             apple = new Apple(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
