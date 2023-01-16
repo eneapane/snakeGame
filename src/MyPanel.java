@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 //my panel paints the game AND
 class MyPanel extends JPanel {
-    private Apple apple;
+    private Pixel apple;
     private final Snake snake;
 
 
@@ -22,7 +22,7 @@ class MyPanel extends JPanel {
         score.setSize(100, 100);
         this.add(score);
         this.snake = Snake.getSnake();
-        this.apple = new Apple(0, 0);
+        this.apple = new Pixel(0, 0);
     }
 
     @Override
@@ -35,21 +35,21 @@ class MyPanel extends JPanel {
 
     private void drawSnake(Graphics g) {
         g.setColor(Color.GREEN);
-        List<BodyPart> list = snake.getSnakeCoordinates();
-        for (BodyPart bodyPart : list)
-            g.fillRect(bodyPart.x(), bodyPart.y(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
+        List<Pixel> list = snake.getSnakeCoordinates();
+        for (Pixel pixel : list)
+            g.fillRect(pixel.x(), pixel.y(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     private void drawApple(Graphics g) {
         g.setColor(Color.RED);
-        if (apple.getX() == snake.getSnakeCoordinates().get(0).x() &&
-                apple.getY() == snake.getSnakeCoordinates().get(0).y()) {
+        if (apple.x() == snake.getSnakeCoordinates().get(0).x() &&
+                apple.y() == snake.getSnakeCoordinates().get(0).y()) {
             int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.WIDTH.numberOfSquares());
             int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares());
-            apple = new Apple(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
+            apple = new Pixel(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
             snake.addCoordinate();
         }
-        g.fillOval(apple.getX(), apple.getY(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
+        g.fillOval(apple.x(), apple.y(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     private void drawGrid(Graphics g) {

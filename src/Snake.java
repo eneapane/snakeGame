@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 class Snake {
     private static Snake single_instance = null;
     private int length;
-    private final List<BodyPart> snakeCoordinates;
+    private final List<Pixel> snakeCoordinates;
 
     public static Snake getSnake() {
         if (single_instance == null)
@@ -18,12 +18,12 @@ class Snake {
         int yC = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares()) * Dimensions.HEIGHT.squareLength();
         int xC = ThreadLocalRandom.current().nextInt(2, Dimensions.WIDTH.numberOfSquares()) * Dimensions.WIDTH.squareLength();
         snakeCoordinates = new ArrayList<>();
-        snakeCoordinates.add(new BodyPart(xC, yC));
-        snakeCoordinates.add(new BodyPart(xC - Dimensions.WIDTH.squareLength(), yC));
-        snakeCoordinates.add(new BodyPart(xC - 2 * Dimensions.HEIGHT.squareLength(), yC));
+        snakeCoordinates.add(new Pixel(xC, yC));
+        snakeCoordinates.add(new Pixel(xC - Dimensions.WIDTH.squareLength(), yC));
+        snakeCoordinates.add(new Pixel(xC - 2 * Dimensions.HEIGHT.squareLength(), yC));
     }
 
-    public List<BodyPart> getSnakeCoordinates() {
+    public List<Pixel> getSnakeCoordinates() {
         return snakeCoordinates;
     }
 
@@ -37,7 +37,7 @@ class Snake {
             } else {
                 newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y() - Dimensions.HEIGHT.squareLength();
             }
-            this.snakeCoordinates.add(new BodyPart(newX, newY));
+            this.snakeCoordinates.add(new Pixel(newX, newY));
         } else if (snakeIsMovingHorizontally()) {
             int newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y();
             int newX;
@@ -46,7 +46,7 @@ class Snake {
             } else {
                 newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x() - Dimensions.WIDTH.squareLength();
             }
-            this.snakeCoordinates.add(new BodyPart(newX, newY));
+            this.snakeCoordinates.add(new Pixel(newX, newY));
         }
     }
 
@@ -90,7 +90,7 @@ class Snake {
                     + Dimensions.WIDTH.squareLength()) % Dimensions.WIDTH.totalLength();
             newY = snakeCoordinates.get(0).y();
         }
-        BodyPart newCoordinate = new BodyPart(newX, newY);
+        Pixel newCoordinate = new Pixel(newX, newY);
         if(snakeCoordinates.contains(newCoordinate))
             throw new RuntimeException("Snake bit itself.");
         snakeCoordinates.add(0, newCoordinate);
