@@ -7,7 +7,9 @@ public class Main {
 
         frame.add(MyPanel.getMyPanel());
 
-        //frame.add(Score.getScore());
+        //to be edited
+
+        //
 
         frame.addKeyListener(new MyKeyListener(Snake.getSnake()));
 
