@@ -5,10 +5,13 @@ import java.util.LinkedList;
 class MyKeyListener extends KeyAdapter {
     private boolean firstKeyTypedCall;
 
+    private final Snake snake;
     private char lastPressedChar = 'd';
 
+    private MyRunnable currentRunnableObject;
+
     MyKeyListener(Snake snake) {
-        MyRunnable.setSnake(snake);
+        this.snake = snake;
         firstKeyTypedCall = true;
     }
 
@@ -29,7 +32,7 @@ class MyKeyListener extends KeyAdapter {
 
     private void stopCurrentRunningThread(){
         if (!firstKeyTypedCall)
-            MyRunnable.doStop();
+            currentRunnableObject.doStop();
         firstKeyTypedCall = false;
     }
 
@@ -60,17 +63,17 @@ class MyKeyListener extends KeyAdapter {
     }
 
     private void startNewRunningThread(){
-        MyRunnable.setLastPressedCharacter(lastPressedChar);
-        Thread thread = new Thread(new MyRunnable());
+        currentRunnableObject = new MyRunnable(this.snake, this.lastPressedChar);
+        Thread thread = new Thread(currentRunnableObject);
         thread.start();
     }
 
-    private static class MyRunnable implements Runnable {
-        private static Snake snake;
-        private static boolean doStop = false;
-        private static char lastPressedCharacter;
+    private class MyRunnable implements Runnable {
+        private Snake snake;
+        private boolean doStop = false;
+        private char lastPressedCharacter;
 
-        public static synchronized void doStop() {
+        public synchronized void doStop() {
             doStop = true;
         }
 
@@ -82,12 +85,9 @@ class MyKeyListener extends KeyAdapter {
 
         }
 
-         private static void setSnake(Snake snake) {
-            MyRunnable.snake = snake;
-        }
-
-         private static void setLastPressedCharacter(char lastPressedCharacter) {
-            MyRunnable.lastPressedCharacter = lastPressedCharacter;
+        public MyRunnable(Snake snake, char lastPressedCharacter) {
+            this.snake = snake;
+            this.lastPressedCharacter = lastPressedCharacter;
         }
 
         @Override
