@@ -4,12 +4,11 @@ import java.util.LinkedList;
 
 class MyKeyListener extends KeyAdapter {
     private boolean firstKeyTypedCall;
-    private final Snake snake;
-    private MyRunnable runnable;
+
     private char lastPressedChar = 'd';
 
-    public MyKeyListener(Snake snake) {
-        this.snake = snake;
+    MyKeyListener(Snake snake) {
+        MyRunnable.setSnake(snake);
         firstKeyTypedCall = true;
     }
 
@@ -20,16 +19,17 @@ class MyKeyListener extends KeyAdapter {
 
             changeDirectionOverhead();
 
-            if (checkIfItGoesOppositeDirection(e))
+            if (checkIfItGoesOppositeDirection(e)) {
                 lastPressedChar = e.getKeyChar();
 
-            startNewRunningThread();
+                startNewRunningThread();
+            }
         }
     }
 
     private void stopCurrentRunningThread(){
         if (!firstKeyTypedCall)
-            runnable.doStop();
+            MyRunnable.doStop();
         firstKeyTypedCall = false;
     }
 
@@ -60,8 +60,49 @@ class MyKeyListener extends KeyAdapter {
     }
 
     private void startNewRunningThread(){
-        runnable = new MyRunnable(snake, lastPressedChar);
-        Thread thread = new Thread(runnable);
+        MyRunnable.setLastPressedCharacter(lastPressedChar);
+        Thread thread = new Thread(new MyRunnable());
         thread.start();
+    }
+
+    private static class MyRunnable implements Runnable {
+        private static Snake snake;
+        private static boolean doStop = false;
+        private static char lastPressedCharacter;
+
+        public static synchronized void doStop() {
+            doStop = true;
+        }
+
+        private synchronized boolean keepRunning() {
+            return !doStop;
+        }
+
+        private MyRunnable() {
+
+        }
+
+         private static void setSnake(Snake snake) {
+            MyRunnable.snake = snake;
+        }
+
+         private static void setLastPressedCharacter(char lastPressedCharacter) {
+            MyRunnable.lastPressedCharacter = lastPressedCharacter;
+        }
+
+        @Override
+        public void run() {
+            while (keepRunning()) {
+                try {
+                    Thread.sleep(100);
+                    snake.moveCoordinate(lastPressedCharacter);
+                    MyPanel.getMyPanel().repaint();
+                } catch (InterruptedException | SnakeBitItselfException exc) {
+                    exc.printStackTrace();
+                    System.err.println(exc.getMessage());
+                    System.exit(0);
+                }
+            }
+        }
     }
 }
