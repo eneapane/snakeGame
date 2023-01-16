@@ -97,7 +97,7 @@ class MyKeyListener extends KeyAdapter {
                     Thread.sleep(100);
                     snake.moveCoordinate(lastPressedCharacter);
                     MyPanel.getMyPanel().repaint();
-                } catch (InterruptedException | SnakeBitItselfException exc) {
+                } catch (InterruptedException exc) {
                     exc.printStackTrace();
                     System.err.println(exc.getMessage());
                     System.exit(0);

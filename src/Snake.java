@@ -92,7 +92,7 @@ class Snake {
         }
         BodyPart newCoordinate = new BodyPart(newX, newY);
         if(snakeCoordinates.contains(newCoordinate))
-            throw new SnakeBitItselfException();
+            throw new RuntimeException("Snake bit itself.");
         snakeCoordinates.add(0, newCoordinate);
     }
 }
