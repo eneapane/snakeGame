@@ -1,26 +1,29 @@
 import java.awt.*;
 
 public enum Dimensions {
-    WIDTH(650, 25),
-    HEIGHT(650, 25);
-
+    WIDTH(25),
+    HEIGHT(25
+    );
 
     private final int totalLength;
     private final int numberOfSquares;
 
-    Dimensions(int totalLength, int numberOfSquares){
-        this.totalLength = totalLength;
+    Dimensions(int numberOfSquares) {
         this.numberOfSquares = numberOfSquares;
+        double screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight() * 0.98;
+        double difference = screenHeight % numberOfSquares;
+        this.totalLength = (int) (screenHeight - difference);
     }
 
-    int totalLength(){
+    int totalLength() {
         return totalLength;
     }
 
-    int numberOfSquares(){
+    int numberOfSquares() {
         return numberOfSquares;
     }
-    int squareLength(){
-        return totalLength/numberOfSquares;
+
+    int squareLength() {
+        return totalLength / numberOfSquares;
     }
 }

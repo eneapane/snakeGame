@@ -18,9 +18,11 @@ class MyPanel extends JPanel {
     }
 
     public MyPanel() {
+        //super(new BorderLayout());
         JLabel score = new JLabel("SCORE");
-        score.setSize(100, 100);
-        this.add(score);
+        score.setSize(300, 300);
+        score.setVisible(true);
+        this.add(score, BorderLayout.SOUTH);
         this.snake = Snake.getSnake();
         this.apple = new Pixel(0, 0);
     }
