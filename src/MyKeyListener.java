@@ -4,14 +4,13 @@ import java.awt.event.KeyEvent;
 class MyKeyListener extends KeyAdapter {
     private boolean firstKeyTypedCall;
 
-    private final Snake snake;
     private final AbstractLevel level;
     private char lastPressedChar = 'd';
 
     private MyRunnable currentRunnableObject;
 
-    MyKeyListener(Snake snake, AbstractLevel level) {
-        this.snake = snake;
+    MyKeyListener(AbstractLevel level) {
+
         this.level = level;
         firstKeyTypedCall = true;
     }
@@ -64,13 +63,13 @@ class MyKeyListener extends KeyAdapter {
     }
 
     private void startNewRunningThread(){
-        currentRunnableObject = new MyRunnable(this.snake, this.lastPressedChar);
+        currentRunnableObject = new MyRunnable(this.lastPressedChar);
         Thread thread = new Thread(currentRunnableObject);
         thread.start();
     }
 
     private class MyRunnable implements Runnable {
-        private Snake snake;
+        private final Snake snake = Snake.instanceOf();
         private boolean doStop = false;
         private char lastPressedCharacter;
 
@@ -86,8 +85,7 @@ class MyKeyListener extends KeyAdapter {
 
         }
 
-        public MyRunnable(Snake snake, char lastPressedCharacter) {
-            this.snake = snake;
+        public MyRunnable(char lastPressedCharacter) {
             this.lastPressedCharacter = lastPressedCharacter;
         }
 
