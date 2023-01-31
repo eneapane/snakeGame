@@ -93,7 +93,7 @@ class MyKeyListener extends KeyAdapter {
         public void run() {
             while (keepRunning()) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(100 - snake.getLength() * 4L);
                     snake.moveCoordinate(lastPressedCharacter);
                     level.repaint();
                 } catch (RuntimeException | InterruptedException exc) {
