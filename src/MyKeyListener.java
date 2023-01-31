@@ -1,17 +1,18 @@
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
 
 class MyKeyListener extends KeyAdapter {
     private boolean firstKeyTypedCall;
 
     private final Snake snake;
+    private final AbstractLevel level;
     private char lastPressedChar = 'd';
 
     private MyRunnable currentRunnableObject;
 
-    MyKeyListener(Snake snake) {
+    MyKeyListener(Snake snake, AbstractLevel level) {
         this.snake = snake;
+        this.level = level;
         firstKeyTypedCall = true;
     }
 
@@ -96,7 +97,7 @@ class MyKeyListener extends KeyAdapter {
                 try {
                     Thread.sleep(100);
                     snake.moveCoordinate(lastPressedCharacter);
-                    MyPanel.getMyPanel().repaint();
+                    level.repaint();
                 } catch (RuntimeException | InterruptedException exc) {
                     exc.printStackTrace();
                     System.err.println(exc.getMessage());

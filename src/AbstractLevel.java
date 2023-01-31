@@ -3,22 +3,16 @@ import java.awt.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 //my panel paints the game AND
-class MyPanel extends JPanel {
+abstract class AbstractLevel extends JPanel {
     private Pixel apple;
     private final Snake snake;
 
 
-    private static MyPanel single_instance;
+    private static AbstractLevel single_instance;
 
-    public static MyPanel getMyPanel() {
 
-        if (single_instance == null)
-            single_instance = new MyPanel();
-        return single_instance;
-    }
-
-    public MyPanel() {
-        this.snake = Snake.getSnake();
+    public AbstractLevel() {
+        this.snake = Snake.instanceOf();
         this.apple = new Pixel(0, 0);
     }
 
@@ -26,10 +20,13 @@ class MyPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         drawGrid(g);
+        drawWall(g);
         drawSnake(g);
         drawApple(g);
         drawScore(g);
     }
+
+    protected abstract void drawWall(Graphics g);
 
     private void drawScore(Graphics g){;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

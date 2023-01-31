@@ -15,7 +15,7 @@ public enum Dimensions {
         this.totalLength = (int) (screenHeight - difference);
     }
 
-    int totalLength() {
+    public int totalLength() {
         return totalLength;
     }
 

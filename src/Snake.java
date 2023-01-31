@@ -11,7 +11,7 @@ class Snake {
         return length;
     }
 
-    public static Snake getSnake() {
+    public static Snake instanceOf() {
         if (single_instance == null)
             single_instance = new Snake();
         return single_instance;

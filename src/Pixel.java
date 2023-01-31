@@ -1,3 +1,3 @@
-record Pixel(int x, int y) //data structure
+public record Pixel(int x, int y) //data structure
 {
 }
