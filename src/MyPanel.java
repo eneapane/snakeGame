@@ -18,11 +18,6 @@ class MyPanel extends JPanel {
     }
 
     public MyPanel() {
-        //super(new BorderLayout());
-        JLabel score = new JLabel("SCORE");
-        score.setSize(300, 300);
-        score.setVisible(true);
-        this.add(score, BorderLayout.SOUTH);
         this.snake = Snake.getSnake();
         this.apple = new Pixel(0, 0);
     }
@@ -33,6 +28,20 @@ class MyPanel extends JPanel {
         drawGrid(g);
         drawSnake(g);
         drawApple(g);
+        drawScore(g);
+    }
+
+    private void drawScore(Graphics g){;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = (int) (screenSize.width * 0.75);
+        int screenHeight = (int) (screenSize.height * 0.5);
+        int scoreboardWidth = 2 * screenWidth / 10;
+        int scoreboardHeight = 2 * screenHeight / 10;
+        g.setColor(Color.ORANGE);
+        g.fillRect(screenWidth - scoreboardWidth / 2, screenHeight - scoreboardHeight/2, scoreboardWidth, scoreboardHeight);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.drawString("SCORE: " + (snake.getLength() - 3), screenWidth - scoreboardWidth/3, screenHeight);
     }
 
     private void drawSnake(Graphics g) {

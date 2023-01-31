@@ -7,6 +7,10 @@ class Snake {
     private int length;
     private final List<Pixel> snakeCoordinates;
 
+    public int getLength() {
+        return length;
+    }
+
     public static Snake getSnake() {
         if (single_instance == null)
             single_instance = new Snake();
