@@ -81,10 +81,6 @@ class MyKeyListener extends KeyAdapter {
             return !doStop;
         }
 
-        private MyRunnable() {
-
-        }
-
         public MyRunnable(char lastPressedCharacter) {
             this.lastPressedCharacter = lastPressedCharacter;
         }
@@ -96,6 +92,8 @@ class MyKeyListener extends KeyAdapter {
                     Thread.sleep(100 - snake.getLength() * 4L);
                     snake.moveCoordinate(lastPressedCharacter);
                     level.repaint();
+                    if(level.getWall().contains(snake.getSnakeCoordinates().get(0)))
+                        throw new RuntimeException("WALL HIT!");
                 } catch (RuntimeException | InterruptedException exc) {
                     exc.printStackTrace();
                     System.err.println(exc.getMessage());

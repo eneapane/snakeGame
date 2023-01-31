@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 //my panel paints the game AND
 abstract class AbstractLevel extends JPanel {
@@ -13,7 +14,7 @@ abstract class AbstractLevel extends JPanel {
 
     public AbstractLevel() {
         this.snake = Snake.instanceOf();
-        this.apple = new Pixel(0, 0);
+        this.apple = new Pixel(Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
     }
 
     @Override
@@ -26,7 +27,6 @@ abstract class AbstractLevel extends JPanel {
         drawScore(g);
     }
 
-    protected abstract void drawWall(Graphics g);
 
     private void drawScore(Graphics g){;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -52,9 +52,11 @@ abstract class AbstractLevel extends JPanel {
         g.setColor(Color.RED);
         if (apple.x() == snake.getSnakeCoordinates().get(0).x() &&
                 apple.y() == snake.getSnakeCoordinates().get(0).y()) {
-            int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.WIDTH.numberOfSquares());
-            int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares());
-            apple = new Pixel(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
+            do {
+                int randomXRectangle = ThreadLocalRandom.current().nextInt(Dimensions.WIDTH.numberOfSquares());
+                int randomYRectangle = ThreadLocalRandom.current().nextInt(Dimensions.HEIGHT.numberOfSquares());
+                apple = new Pixel(randomXRectangle * Dimensions.WIDTH.squareLength(), randomYRectangle * Dimensions.HEIGHT.squareLength());
+            } while (getWall().contains(apple));
             snake.addCoordinate();
         }
         g.fillOval(apple.x(), apple.y(), Dimensions.WIDTH.squareLength(), Dimensions.HEIGHT.squareLength());
@@ -72,6 +74,8 @@ abstract class AbstractLevel extends JPanel {
             g.drawLine(0, y, Dimensions.WIDTH.totalLength(), y);
         g.setColor(previousColor);
     }
+    protected abstract void drawWall(Graphics g);
+    protected abstract Set<Pixel> getWall();
 
 }
 
