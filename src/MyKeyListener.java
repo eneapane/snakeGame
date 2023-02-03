@@ -4,10 +4,14 @@ import java.awt.event.KeyEvent;
 class MyKeyListener extends KeyAdapter {
     private boolean firstKeyTypedCall;
 
-    private final AbstractLevel level;
+    private AbstractLevel level;
     private char lastPressedChar = 'd';
 
     private MyRunnable currentRunnableObject;
+
+    public void setStrategy(AbstractLevel level){
+        this.level = level;
+    }
 
     MyKeyListener(AbstractLevel level) {
 
@@ -63,7 +67,7 @@ class MyKeyListener extends KeyAdapter {
     }
 
     private void startNewRunningThread(){
-        currentRunnableObject = new MyRunnable(this.lastPressedChar);
+        currentRunnableObject = new MyRunnable();
         Thread thread = new Thread(currentRunnableObject);
         thread.start();
     }
@@ -71,7 +75,6 @@ class MyKeyListener extends KeyAdapter {
     private class MyRunnable implements Runnable {
         private final Snake snake = Snake.instanceOf();
         private boolean doStop = false;
-        private char lastPressedCharacter;
 
         public synchronized void doStop() {
             doStop = true;
@@ -81,19 +84,19 @@ class MyKeyListener extends KeyAdapter {
             return !doStop;
         }
 
-        public MyRunnable(char lastPressedCharacter) {
-            this.lastPressedCharacter = lastPressedCharacter;
+        public MyRunnable() {
         }
 
         @Override
         public void run() {
             while (keepRunning()) {
                 try {
-                    Thread.sleep(100 - snake.getLength() * 4L);
-                    snake.moveCoordinate(lastPressedCharacter);
+                    Thread.sleep(100 - snake.getLength() * 2L);
+                    snake.moveCoordinate(lastPressedChar);
                     level.repaint();
                     if(level.getWall().contains(snake.getSnakeCoordinates().get(0)))
                         throw new RuntimeException("WALL HIT!");
+                    Context.refreshContext();
                 } catch (RuntimeException | InterruptedException exc) {
                     exc.printStackTrace();
                     System.err.println(exc.getMessage());
