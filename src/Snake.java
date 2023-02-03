@@ -5,10 +5,19 @@ import java.util.concurrent.ThreadLocalRandom;
 class Snake {
     private static Snake single_instance = null;
     private int length;
-    private final List<Pixel> snakeCoordinates;
+    private List<Pixel> snakeCoordinates;
 
     public int getLength() {
         return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+        List<Pixel> copyCoordinates = new ArrayList<>();
+        for(int i = 0; i < length; i++){
+            copyCoordinates.add(snakeCoordinates.get(i));
+        }
+        snakeCoordinates = copyCoordinates;
     }
 
     public static Snake instanceOf() {
@@ -34,24 +43,32 @@ class Snake {
     public void addCoordinate() {
         this.length++;
         if (snakeIsMovingVertically()) {
-            int newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x();
-            int newY;
-            if (snakeIsMovingUp()) {
-                newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y() + Dimensions.HEIGHT.squareLength();
-            } else {
-                newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y() - Dimensions.HEIGHT.squareLength();
-            }
-            this.snakeCoordinates.add(new Pixel(newX, newY));
+            addVerticalCoordinate();
         } else if (snakeIsMovingHorizontally()) {
-            int newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y();
-            int newX;
-            if (snakeIsMovingRight()) {
-                newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x() + Dimensions.WIDTH.squareLength();
-            } else {
-                newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x() - Dimensions.WIDTH.squareLength();
-            }
-            this.snakeCoordinates.add(new Pixel(newX, newY));
+            addHorizontalCoordinate();
         }
+    }
+
+    private void addHorizontalCoordinate() {
+        int newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y();
+        int newX;
+        if (snakeIsMovingRight()) {
+            newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x() + Dimensions.WIDTH.squareLength();
+        } else {
+            newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x() - Dimensions.WIDTH.squareLength();
+        }
+        this.snakeCoordinates.add(new Pixel(newX, newY));
+    }
+
+    private void addVerticalCoordinate() {
+        int newX = this.snakeCoordinates.get(snakeCoordinates.size() - 1).x();
+        int newY;
+        if (snakeIsMovingUp()) {
+            newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y() + Dimensions.HEIGHT.squareLength();
+        } else {
+            newY = this.snakeCoordinates.get(snakeCoordinates.size() - 1).y() - Dimensions.HEIGHT.squareLength();
+        }
+        this.snakeCoordinates.add(new Pixel(newX, newY));
     }
 
     private boolean snakeIsMovingVertically() {
