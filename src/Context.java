@@ -2,6 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Context {
+
+    private static class LevelTracker {
+        private static final int maxLevel = 2;
+        private static int currentLevel = 0;
+        private static final AbstractLevel [] levels = {new Level1(), new Level2(), new Level3()};
+    }
     private static Context context;
     private static AbstractLevel strategy;
 
@@ -13,7 +19,7 @@ public class Context {
     }
 
     private Context(){
-        strategy = new Level1();
+        strategy = LevelTracker.levels[LevelTracker.currentLevel];
         keyListener = new MyKeyListener(strategy);
     }
 
@@ -27,9 +33,12 @@ public class Context {
     }
 
     public static void refreshContext(){
-        if(Snake.instanceOf().getLength() % 10 == 0){
-            Snake.instanceOf().setLength(3);
-            setStrategy(new Level2());
+        if(LevelTracker.currentLevel < LevelTracker.maxLevel) {
+            if(Snake.instanceOf().getLength() % 4 == 0){
+                Snake.instanceOf().setLength(3);
+                LevelTracker.currentLevel++;
+                setStrategy(LevelTracker.levels[LevelTracker.currentLevel]);
+            }
         }
     }
 
